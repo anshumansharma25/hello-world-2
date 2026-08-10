@@ -115,8 +115,8 @@ pipeline {
         stage('Package & Archive') {
             steps {
                 sh "mvn package -DskipTests -B -Drevision=${env.APP_VERSION}"
-                archiveArtifacts(artifacts: 'target/*.jar', fingerprint: true)
-                echo "Artifact archived: ${env.APP_NAME}-${env.APP_VERSION}.jar"
+                archiveArtifacts(artifacts: 'target/*.war', fingerprint: true)
+                echo "Artifact archived: ${env.APP_NAME}-${env.APP_VERSION}.war"
             }
         }
 
