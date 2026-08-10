@@ -90,13 +90,13 @@ pipeline {
             steps {
                 withSonarQubeEnv('MySonarQubeServer') {
                     sh """
-                               mvn sonar:sonar \
-          -Dsonar.projectKey=${env.APP_NAME} \
-          -Dsonar.projectName="TechBuild ${env.APP_NAME}" \
-          -Dsonar.projectVersion=${env.APP_VERSION} \
-          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
-          -B
-    """
+                mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+                  -Dsonar.projectKey=${env.APP_NAME} \
+                  -Dsonar.projectName="TechBuild ${env.APP_NAME}" \
+                  -Dsonar.projectVersion=${env.APP_VERSION} \
+                  -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml \
+                  -B
+            """
                 }
             }
         }
