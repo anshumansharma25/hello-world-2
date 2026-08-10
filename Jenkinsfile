@@ -90,7 +90,7 @@ pipeline {
             steps {
                 withSonarQubeEnv('MySonarQubeServer') {
                     sh """
-        mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.0.0.4638:sonar \
+                               mvn sonar:sonar \
           -Dsonar.projectKey=${env.APP_NAME} \
           -Dsonar.projectName="TechBuild ${env.APP_NAME}" \
           -Dsonar.projectVersion=${env.APP_VERSION} \
