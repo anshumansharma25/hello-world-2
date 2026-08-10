@@ -82,13 +82,6 @@
                 <version>8.1.22.v20160922</version>
             </plugin>
 
-            <!-- SonarQube Maven Plugin -->
-            <plugin>
-                <groupId>org.sonarsource.scanner.maven</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>5.0.0.4638</version>
-            </plugin>
-
         </plugins>
 
     </build>
