@@ -52,7 +52,7 @@ pipeline {
         }
                 // ── STAGE 2: Build ────────────────────────────────────────────────
         stage('Build') {
-            tools { maven 'Maven-3.9' }
+            tools { maven 'Maven-3.9.16' }
             steps {
                 echo "Building ${env.APP_NAME} v${env.APP_VERSION}"
                 sh 'mvn clean compile -B -Dmaven.test.skip=true'
