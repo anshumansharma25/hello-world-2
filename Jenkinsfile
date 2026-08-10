@@ -1,21 +1,12 @@
-// ═══════════════════════════════════════════════════════════════════════════
-// Jenkinsfile — TechBuild Solutions / hello-world-2
-// Repository: https://github.com/jagdishmodi/hello-world-2.git
-
-// Pipeline: Checkout → Build → Test → Quality Analysis → Archive → Notify
-// ═══════════════════════════════════════════════════════════════════════════
- 
 pipeline {
- 
-    // ── Docker agent for isolated, reproducible builds ─────────────────────
+
     agent {
         docker {
             image 'maven:3.9.6-eclipse-temurin-17'
-            args  '-v $HOME/.m2:/root/.m2'    // Cache Maven dependencies between builds
+            args '-v $HOME/.m2:/root/.m2'
         }
     }
- 
-    // ── Environment variables ───────────────────────────────────────────────
+
     environment {
         APP_NAME     = 'hello-world-2'
         APP_VERSION  = "1.0.${env.BUILD_NUMBER}"
@@ -23,8 +14,7 @@ pipeline {
         SONAR_URL    = 'http://sonarqube:9000'
         ARTIFACT_DIR = 'target'
     }
- 
-    // ── Pipeline-wide options ───────────────────────────────────────────────
+
     options {
         timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
@@ -32,34 +22,39 @@ pipeline {
         timestamps()
         ansiColor('xterm')
     }
- 
-    // ── Build on push to any branch; deploy only from main ─────────────────
+
     triggers {
-        githubPush()    // Requires GitHub plugin — responds to webhook events
+        githubPush()
     }
- 
-    // ══════════════════════════════════════════════════════════════════════
+
     stages {
- 
-        // ── STAGE 1: Checkout ─────────────────────────────────────────────
+
         stage('Checkout') {
             steps {
                 checkout scm
-                echo "Branch: ${env.GIT_BRANCH} | Commit: ${env.GIT_COMMIT[0..7]}"
+
                 echo "Branch: ${env.GIT_BRANCH}"
-                echo "Commit: ${env.GIT_COMMIT}"
+                echo "Commit: ${env.GIT_COMMIT[0..7]}"
             }
         }
-                // ── STAGE 2: Build ────────────────────────────────────────────────
+
         stage('Build') {
-            tools { maven 'Maven-3.9' }
             steps {
                 echo "Building ${env.APP_NAME} v${env.APP_VERSION}"
+
+                sh 'java -version'
+                sh 'mvn -version'
                 sh 'mvn clean compile -B -Dmaven.test.skip=true'
             }
+
             post {
-                success { echo 'Compile successful — moving to Test stage.' }
-                failure { echo 'Compile FAILED — check pom.xml and source errors.' }
+                success {
+                    echo 'Compile successful — moving to Test stage.'
+                }
+
+                failure {
+                    echo 'Compile FAILED — check pom.xml and source errors.'
+                }
             }
         }
     }
