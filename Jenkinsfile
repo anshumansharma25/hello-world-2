@@ -59,7 +59,6 @@ pipeline {
         }
                 // ── STAGE 3: Test ─────────────────────────────────────────────────
         stage('Test') {
-            tools { maven 'Maven-3.9' }
             steps {
                 sh 'mvn test -B'
             }
