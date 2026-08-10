@@ -143,4 +143,37 @@ pipeline {
         }
  
     }    // end stages
+    post {
+    success {
+        echo "PIPELINE SUCCESS — ${env.APP_NAME} v${env.APP_VERSION}"
+
+        slackSend(
+            channel: '#ci-notifications',
+            color: 'good',
+            message: "BUILD PASSED: ${env.APP_NAME} v${env.APP_VERSION} | ${env.BUILD_URL}"
+        )
+    }
+
+    failure {
+        echo "PIPELINE FAILED — check logs at ${env.BUILD_URL}"
+
+        slackSend(
+            channel: '#ci-notifications',
+            color: 'danger',
+            message: "BUILD FAILED: ${env.APP_NAME} #${env.BUILD_NUMBER} | ${env.BUILD_URL}"
+        )
+    }
+
+    unstable {
+        slackSend(
+            channel: '#ci-notifications',
+            color: 'warning',
+            message: "BUILD UNSTABLE: ${env.APP_NAME} #${env.BUILD_NUMBER} — test failures | ${env.BUILD_URL}"
+        )
+    }
+
+    always {
+        cleanWs()
+    }
+}
 }
