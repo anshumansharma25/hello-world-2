@@ -143,7 +143,7 @@ pipeline {
         }
  
     }    // end stages
-    post {
+post {
     success {
         echo "PIPELINE SUCCESS — ${env.APP_NAME} v${env.APP_VERSION}"
 
@@ -151,6 +151,15 @@ pipeline {
             channel: '#ci-notifications',
             color: 'good',
             message: "BUILD PASSED: ${env.APP_NAME} v${env.APP_VERSION} | ${env.BUILD_URL}"
+        )
+
+        emailext(
+            to: 'anshuman.sharma@gmail.com',
+            subject: "BUILD PASSED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """Successful build for ${env.APP_NAME} v${env.APP_VERSION}
+
+Build URL: ${env.BUILD_URL}
+"""
         )
     }
 
@@ -161,6 +170,16 @@ pipeline {
             channel: '#ci-notifications',
             color: 'danger',
             message: "BUILD FAILED: ${env.APP_NAME} #${env.BUILD_NUMBER} | ${env.BUILD_URL}"
+        )
+
+        emailext(
+            to: 'anshumansharma.tech@gmail.com',
+            subject: "BUILD FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+            body: """Build ${env.BUILD_NUMBER} failed.
+
+Console:
+${env.BUILD_URL}console
+"""
         )
     }
 
