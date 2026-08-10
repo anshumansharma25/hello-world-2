@@ -57,5 +57,35 @@ pipeline {
                 }
             }
         }
+                // ── STAGE 3: Test ─────────────────────────────────────────────────
+        stage('Test') {
+            tools { maven 'Maven-3.9' }
+            steps {
+                sh 'mvn test -B'
+            }
+            post {
+                always {
+                    // Publish JUnit test results regardless of pass/fail
+                    junit(testResults: 'target/surefire-reports/**/*.xml',
+                          allowEmptyResults: false)
+                }
+                unstable {
+                    echo 'WARNING: Tests failed — build marked UNSTABLE.'
+                    // Enforce 80% pass rate:
+                    script {
+                        def results = currentBuild.rawBuild.getAction(
+                            hudson.tasks.test.AbstractTestResultAction.class)
+                        if (results) {
+                            def passRate = (results.totalCount - results.failCount) /
+                                           results.totalCount * 100
+                            if (passRate < 80) {
+                                error("Test pass rate ${passRate.round(1)}% is below 80% threshold!")
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }
