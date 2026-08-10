@@ -87,9 +87,8 @@ pipeline {
         }
                 // ── STAGE 4: Quality Analysis ─────────────────────────────────────
         stage('Quality Analysis') {
-            tools { maven 'Maven-3.9' }
             steps {
-                withSonarQubeEnv('SonarQube-Local') {
+                withSonarQubeEnv('MySonarQubeServer') {
                     sh """
                         mvn sonar:sonar \
                           -Dsonar.projectKey=${env.APP_NAME} \
