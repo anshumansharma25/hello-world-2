@@ -10,7 +10,7 @@ pipeline {
     // ── Docker agent for isolated, reproducible builds ─────────────────────
     agent {
         docker {
-            image 'eclipse-temurin:17-jdk-alpine'
+            image 'maven:3.9.6-eclipse-temurin-17'
             args  '-v $HOME/.m2:/root/.m2'    // Cache Maven dependencies between builds
         }
     }
@@ -52,7 +52,7 @@ pipeline {
         }
                 // ── STAGE 2: Build ────────────────────────────────────────────────
         stage('Build') {
-            tools { maven 'Maven-3.9.16' }
+            tools { maven 'Maven-3.9' }
             steps {
                 echo "Building ${env.APP_NAME} v${env.APP_VERSION}"
                 sh 'mvn clean compile -B -Dmaven.test.skip=true'
