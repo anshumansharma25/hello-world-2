@@ -120,6 +120,31 @@ pipeline {
             }
         }
 
+                // ── STAGE 7: Publish to Nexus (main branch only) ─────────────────
+        stage('Publish Artifact') {
+            when { branch 'main' }
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion:  'nexus3',
+                    protocol:      'http',
+                    nexusUrl:      'localhost:8081',
+                    groupId:       'io.techbuild',
+                    version:       env.APP_VERSION,
+                    repository:    'techbuild-releases',
+                    credentialsId: 'nexus-creds',
+                    artifacts: [[
+                        artifactId: env.APP_NAME,
+                        classifier: '',
+                        file:       "target/${env.APP_NAME}-${env.APP_VERSION}.war",
+                        type:       'war'
+                    ]]
+                )
+            }
+        }
+ 
+    }    // end stages
+
+
 
 
 
