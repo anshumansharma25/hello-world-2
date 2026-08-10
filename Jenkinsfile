@@ -101,6 +101,17 @@ pipeline {
             }
         }
 
+                // ── STAGE 5: Quality Gate ─────────────────────────────────────────
+        stage('Quality Gate') {
+            agent none
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+
 
     }
 }
