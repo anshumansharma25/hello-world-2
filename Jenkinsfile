@@ -122,7 +122,12 @@ pipeline {
 
                 // ── STAGE 7: Publish to Nexus (main branch only) ─────────────────
         stage('Publish Artifact') {
-            when { branch 'master' }
+            when {
+    expression {
+        env.GIT_BRANCH == 'origin/master' ||
+        env.GIT_BRANCH == 'master'
+    }
+}
             steps {
                 nexusArtifactUploader(
                     nexusVersion:  'nexus3',
@@ -135,7 +140,7 @@ pipeline {
                     artifacts: [[
                         artifactId: env.APP_NAME,
                         classifier: '',
-                        file:       "target/${env.APP_NAME}-${env.APP_VERSION}.war",
+                        file:       "target/hello-world.war",
                         type:       'war'
                     ]]
                 )
